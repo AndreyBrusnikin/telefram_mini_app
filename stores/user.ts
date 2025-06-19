@@ -40,9 +40,26 @@ export const useUserStore = defineStore('user', () => {
       console.log('📱 window.Telegram:', window.Telegram)
       console.log('🌐 process.client:', process.client)
 
-      // Проверяем, доступен ли Telegram WebApp
+      // Если Telegram WebApp недоступен, пытаемся активировать mock режим
       if (!window.Telegram?.WebApp) {
-        console.log('❌ Telegram WebApp недоступен, возможно приложение открыто в браузере')
+        console.log('❌ Telegram WebApp недоступен, активируем mock режим...')
+        
+        // Используем composable для активации mock режима
+        const { enableMockMode } = useTelegramMock()
+        const mockActivated = enableMockMode()
+        
+        if (mockActivated) {
+          console.log('✅ Mock режим активирован, ждем инициализации...')
+          // Даем время на инициализацию mock данных
+          await new Promise(resolve => setTimeout(resolve, 100))
+        } else {
+          throw new Error('Не удалось активировать режим разработки. Откройте приложение в Telegram или обновите страницу.')
+        }
+      }
+
+      // Проверяем, доступен ли Telegram WebApp (включая mock)
+      if (!window.Telegram?.WebApp) {
+        console.log('❌ Telegram WebApp все еще недоступен после попытки активации mock режима')
         throw new Error('Telegram WebApp недоступен. Откройте приложение в Telegram или используйте режим разработки.')
       }
 
@@ -59,7 +76,7 @@ export const useUserStore = defineStore('user', () => {
 
       if (!telegramUser) {
         console.log('❌ Пользователь не найден в initDataUnsafe')
-        throw new Error('Не удалось получить данные пользователя из Telegram. Убедитесь, что приложение открыто через Telegram бота.')
+        throw new Error('Не удалось получить данные пользователя. Попробуйте обновить страницу или используйте кнопку "Включить тестовый режим".')
       }
 
       // Преобразуем данные Telegram в наш формат
@@ -79,9 +96,11 @@ export const useUserStore = defineStore('user', () => {
       webApp.expand()
       webApp.setHeaderColor('#2481cc')
 
+      console.log('✅ Авторизация успешна:', userProfile)
       return true
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка авторизации'
+      console.error('❌ Ошибка авторизации:', err)
       setError(errorMessage)
       return false
     } finally {
