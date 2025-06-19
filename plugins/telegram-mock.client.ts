@@ -3,11 +3,20 @@ export default defineNuxtPlugin(() => {
   if (process.dev && process.client) {
     const { enableMockMode } = useTelegramMock()
     
-    // Проверяем через небольшую задержку, чтобы дать время загрузиться Telegram скрипту
+    console.log('🧪 Проверяем необходимость mock режима...')
+    
+    // Немедленно проверяем
+    if (!window.Telegram?.WebApp) {
+      console.log('🔄 Telegram WebApp не найден, активируем mock режим')
+      enableMockMode()
+    }
+    
+    // Дополнительная проверка через задержку
     setTimeout(() => {
-      if (!window.Telegram?.WebApp) {
+      if (!window.Telegram?.WebApp?.initDataUnsafe?.user) {
+        console.log('🔄 Данные пользователя отсутствуют, переактивируем mock режим')
         enableMockMode()
       }
-    }, 100)
+    }, 200)
   }
 }) 

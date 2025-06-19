@@ -95,8 +95,29 @@
       <div class="error-message">
         {{ userStore.error || 'Ошибка загрузки приложения' }}
       </div>
+      
+      <!-- Информация о способах использования -->
+      <div class="info-block">
+        <h3>🚀 Как тестировать приложение:</h3>
+        <div class="info-options">
+          <div class="info-option">
+            <strong>🌐 В браузере (разработка):</strong>
+            <p>Откройте в Chrome/Firefox - автоматически загрузятся тестовые данные</p>
+          </div>
+          <div class="info-option">
+            <strong>📱 В Telegram (реально):</strong>
+            <p>Нужно создать бота и развернуть приложение по HTTPS</p>
+            <NuxtLink to="/docs">📖 Инструкция по настройке</NuxtLink>
+          </div>
+        </div>
+      </div>
+      
       <button @click="retry" class="submit-button" style="max-width: 200px;">
         Повторить попытку
+      </button>
+      
+      <button @click="enableMockMode" class="submit-button" style="max-width: 200px; margin-top: 10px; background: #28a745;">
+        🧪 Включить тестовый режим
       </button>
     </div>
   </div>
@@ -239,6 +260,17 @@ const handleInputBlur = () => {
 
 const retry = async () => {
   await initializeApp()
+}
+
+const enableMockMode = async () => {
+  console.log('🧪 Пользователь включает mock режим вручную')
+  const { enableMockMode: activateMock } = useTelegramMock()
+  activateMock()
+  
+  // Попробуем авторизацию снова
+  setTimeout(async () => {
+    await initializeApp()
+  }, 500)
 }
 
 // Управление клавиатурой для мобильных устройств

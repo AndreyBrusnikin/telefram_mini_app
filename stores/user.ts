@@ -36,19 +36,30 @@ export const useUserStore = defineStore('user', () => {
       setLoading(true)
       clearError()
 
+      console.log('🔍 Начинаем авторизацию...')
+      console.log('📱 window.Telegram:', window.Telegram)
+      console.log('🌐 process.client:', process.client)
+
       // Проверяем, доступен ли Telegram WebApp
       if (!window.Telegram?.WebApp) {
-        throw new Error('Telegram WebApp недоступен')
+        console.log('❌ Telegram WebApp недоступен, возможно приложение открыто в браузере')
+        throw new Error('Telegram WebApp недоступен. Откройте приложение в Telegram или используйте режим разработки.')
       }
 
       const webApp = window.Telegram.WebApp
+      console.log('✅ Telegram WebApp найден:', webApp)
+      console.log('📊 initDataUnsafe:', webApp.initDataUnsafe)
+      
       webApp.ready()
 
       // Получаем данные пользователя из Telegram
       const telegramUser = webApp.initDataUnsafe?.user
 
+      console.log('👤 Данные пользователя:', telegramUser)
+
       if (!telegramUser) {
-        throw new Error('Не удалось получить данные пользователя из Telegram')
+        console.log('❌ Пользователь не найден в initDataUnsafe')
+        throw new Error('Не удалось получить данные пользователя из Telegram. Убедитесь, что приложение открыто через Telegram бота.')
       }
 
       // Преобразуем данные Telegram в наш формат

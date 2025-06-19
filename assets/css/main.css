@@ -249,6 +249,56 @@ body {
   color: var(--tg-theme-hint-color, var(--text-secondary));
 }
 
+.info-block {
+  max-width: 500px;
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--tg-theme-secondary-bg-color, var(--border-color));
+  border-radius: 12px;
+  text-align: left;
+}
+
+.info-block h3 {
+  margin-bottom: 15px;
+  color: var(--tg-theme-text-color, var(--text-color));
+  font-size: 18px;
+}
+
+.info-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-option {
+  padding: 12px;
+  background: var(--tg-theme-bg-color, var(--background-color));
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.info-option strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--tg-theme-text-color, var(--text-color));
+}
+
+.info-option p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, var(--text-secondary));
+}
+
+.info-option a {
+  color: var(--tg-theme-link-color, var(--primary-color));
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.info-option a:hover {
+  text-decoration: underline;
+}
+
 /* Анимации */
 .fade-enter-active,
 .fade-leave-active {
